@@ -1,8 +1,10 @@
 package mail
 
 import javax.mail.Message.RecipientType.{BCC, CC, TO}
-import javax.mail.internet.{InternetAddress, MimeMessage}
-import javax.mail.{Message, Session}
+import javax.mail.internet.{InternetAddress, MimeMessage, MimeMultipart, MimeBodyPart}
+import javax.mail.{Message, Session, Multipart, BodyPart}
+import javax.activation.{FileDataSource, DataHandler, DataSource}
+
 
 /**
   * High-level email message.
@@ -19,6 +21,8 @@ class ConfigurableMessage(from: String, session: Session) {
   // low level message
   private var message = new MimeMessage(session)
   message.setFrom(new InternetAddress(from))
+
+  private var multipart = new MimeMultipart()
 
   /* Set the recipients */
   def to(dests: String*): ConfigurableMessage = {
@@ -49,10 +53,28 @@ class ConfigurableMessage(from: String, session: Session) {
     message.setSubject(subject)
   }
 
+  /* Add a file attachment to the email */
+  def attachment(filenames: String*) : ConfigurableMessage = {
+    for (filename <- filenames) {
+      // TODO not hardcoded path
+      var path = "C:/Users/Jonathan/Documents/Intelij/scalamail-dsl/src/main/scala-2.11/mail/" + filename
+      var source = new FileDataSource(path)
+      var messageBodyPart = new MimeBodyPart()
+      messageBodyPart.setDataHandler(new DataHandler(source))
+      messageBodyPart.setFileName(filename)
+      multipart.addBodyPart(messageBodyPart)
+    }
+    this
+  }
+
   /* Set the content of the message (must be html) */
-  /* TODO replace with a multipart object (see MultiPart, MimeBodyPart) */
+  /* TODO something else than files attachment*/
   def content(content: String) = {
-    message.setContent(content, "text/html")
+    var messageBodyPart = new MimeBodyPart()
+    messageBodyPart.setContent(content, "text/html")
+    multipart.addBodyPart(messageBodyPart)
+
+    message.setContent(multipart)
   }
 
   /* Return the low-level message for advanced configuration */

@@ -9,6 +9,9 @@ class Mail extends MailTemplate {
   message subject
     "Holy Grail War"
 
+  message attachment
+    ("test.txt", "test2.txt")
+
   message content
     """
        <h1>A note about the war</h1>
@@ -17,5 +20,4 @@ class Mail extends MailTemplate {
        <p>See you on the battlefield.</p>
        <p>Saber</p>
     """
-
 }

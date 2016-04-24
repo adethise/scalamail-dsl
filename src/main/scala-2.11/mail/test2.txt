@@ -1,0 +1,3 @@
+Hello World !
+
+This is the second attachment to send via java mail.
