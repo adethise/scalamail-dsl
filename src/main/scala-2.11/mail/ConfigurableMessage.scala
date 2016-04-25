@@ -1,9 +1,9 @@
 package mail
 
+import javax.activation.{DataHandler, FileDataSource}
 import javax.mail.Message.RecipientType.{BCC, CC, TO}
-import javax.mail.internet.{InternetAddress, MimeMessage, MimeMultipart, MimeBodyPart}
-import javax.mail.{Message, Session, Multipart, BodyPart}
-import javax.activation.{FileDataSource, DataHandler, DataSource}
+import javax.mail.Session
+import javax.mail.internet.{InternetAddress, MimeBodyPart, MimeMessage, MimeMultipart}
 
 
 /**
@@ -56,8 +56,7 @@ class ConfigurableMessage(from: String, session: Session) {
   /* Add a file attachment to the email */
   def attachment(filenames: String*) : ConfigurableMessage = {
     for (filename <- filenames) {
-      // TODO not hardcoded path
-      var path = "C:/Users/Jonathan/Documents/Intelij/scalamail-dsl/src/main/scala-2.11/mail/" + filename
+      var path = System.getProperty("user.dir") + "/" + filename
       var source = new FileDataSource(path)
       var messageBodyPart = new MimeBodyPart()
       messageBodyPart.setDataHandler(new DataHandler(source))

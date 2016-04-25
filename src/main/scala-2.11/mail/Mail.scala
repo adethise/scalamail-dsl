@@ -10,7 +10,7 @@ class Mail extends MailTemplate {
     "Holy Grail War"
 
   message attachment
-    ("test.txt", "test2.txt")
+          ("test.txt", "test2.txt", "siwj.png")
 
   message content
     """
