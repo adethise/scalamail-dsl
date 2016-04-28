@@ -50,8 +50,8 @@ abstract class MailTemplate {
 	  */
 	def host(name: String) = {
 		val hostport = name split ":"
-		val hostname = hostport(0)
-		val port = hostport(1)
+		val hostname = if (hostport.nonEmpty) hostport(0) else "localhost"
+		val port = if (hostport.tail.nonEmpty) hostport(1) else "2525"
 		val properties: Properties = System.getProperties
 		properties.setProperty("mail.smtp.host", hostname)
 		properties.setProperty("mail.smtp.port", port)
