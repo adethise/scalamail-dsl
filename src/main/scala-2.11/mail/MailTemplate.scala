@@ -16,10 +16,6 @@ abstract class MailTemplate {
 
 	/* Class attributes */
 
-	// SMTP server information
-	var (hostname, port) = ("localhost", "2525")
-
-	// Message
 	protected var message: ConfigurableMessage = null
 	protected var session: Session = null
 
@@ -37,16 +33,13 @@ abstract class MailTemplate {
 	  */
 	implicit def stringToMessage(emitter: String): ConfigurableMessage = {
 
-		if (session == null) {
-			// configure session properties
-			val properties: Properties = System.getProperties
-			properties.setProperty("mail.smtp.host", hostname)
-			properties.setProperty("mail.smtp.port", port)
-			session = Session.getDefaultInstance(properties)
+		// create, store and return the message
+		message = if (session == null) {
+			new ConfigurableMessage(emitter)
+		} else {
+			new ConfigurableMessage(emitter, session)
 		}
 
-		// create, store and return the message
-		message = new ConfigurableMessage(emitter, session)
 		message
 	}
 
@@ -57,8 +50,12 @@ abstract class MailTemplate {
 	  */
 	def host(name: String) = {
 		val hostport = name split ":"
-		hostname = hostport(0)
-		port = hostport(1)
+		val hostname = hostport(0)
+		val port = hostport(1)
+		val properties: Properties = System.getProperties
+		properties.setProperty("mail.smtp.host", hostname)
+		properties.setProperty("mail.smtp.port", port)
+		session = Session.getDefaultInstance(properties)
 	}
 
 	/**

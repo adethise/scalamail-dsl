@@ -1,9 +1,10 @@
 package mail
 
+import java.util.Properties
 import javax.activation.{DataHandler, FileDataSource}
 import javax.mail.Message.RecipientType.{BCC, CC, TO}
-import javax.mail.Session
 import javax.mail.internet.{InternetAddress, MimeBodyPart, MimeMessage, MimeMultipart}
+import javax.mail.{Message, Session}
 
 
 /**
@@ -19,34 +20,33 @@ import javax.mail.internet.{InternetAddress, MimeBodyPart, MimeMessage, MimeMult
 class ConfigurableMessage(from: String, session: Session) {
 
 	// low level message
-	private var message = new MimeMessage(session)
+	private val message = new MimeMessage(session)
 	message.setFrom(new InternetAddress(from))
 
-	private var multipart = new MimeMultipart()
+	private val multipart = new MimeMultipart()
+
+	def this(from: String) = this(from, {
+		val properties: Properties = System.getProperties
+		properties.setProperty("mail.smtp.host", "localhost")
+		properties.setProperty("mail.smtp.port", "2525")
+		Session.getDefaultInstance(properties)
+	})
+
+	def to(dests: String*) = setRecipients(TO, dests)
 
 	/* Set the recipients */
-	def to(dests: String*): ConfigurableMessage = {
+	def setRecipients(mode: Message.RecipientType, dests: Seq[String]):
+	ConfigurableMessage
+	= {
 		for (dest <- dests) {
-			message.addRecipient(TO, new InternetAddress(dest))
+			message.addRecipient(mode, new InternetAddress(dest))
 		}
 		this
 	}
 
-	/* Set the recipients */
-	def cc(dests: String*): ConfigurableMessage = {
-		for (dest <- dests) {
-			message.addRecipient(CC, new InternetAddress(dest))
-		}
-		this
-	}
+	def cc(dests: String*) = setRecipients(CC, dests)
 
-	/* Set the recipients */
-	def bcc(dests: String*): ConfigurableMessage = {
-		for (dest <- dests) {
-			message.addRecipient(BCC, new InternetAddress(dest))
-		}
-		this
-	}
+	def bcc(dests: String*) = setRecipients(BCC, dests)
 
 	/* Set the subject */
 	def subject(subject: String) = {
