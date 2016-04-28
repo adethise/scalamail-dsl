@@ -9,9 +9,9 @@ package mail
   */
 object Send {
 
-  def main(args: Array[String]) {
-    val mail = new Mail
-    mail.send()
-  }
+	def main(args: Array[String]) {
+		val mail = new Mail
+		mail.send()
+	}
 
 }
