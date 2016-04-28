@@ -12,13 +12,12 @@ import javax.mail.{Session, Transport}
   *         Jonathan Powell
   * @version 1.2
   */
-abstract class MailTemplate {
+abstract class MailTemplate extends ListenerManager {
 
 	/* Class attributes */
 
 	protected var message: ConfigurableMessage = null
 	protected var session: Session = null
-	protected var on: ListenerManager = new ListenerManager()
 
 	/**
 	  * Implicit conversion of String to ConfigurableMessage
