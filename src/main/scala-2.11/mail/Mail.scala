@@ -22,4 +22,7 @@ class Mail extends MailTemplate {
 	  <p>Saber</p>
 			"""
 
+	on error {
+		println("Bad end. It's all Kirei's fault.")
+	}
 }

@@ -1,7 +1,7 @@
 package mail
 
 import java.util.Properties
-import javax.mail.{MessagingException, Session, Transport}
+import javax.mail.{Session, Transport}
 
 /**
   * DSL Mail Template
@@ -19,6 +19,8 @@ abstract class MailTemplate {
   // SMTP server information
   protected var message: ConfigurableMessage = null
   protected var session: Session = null
+
+	protected var on: ErrorHandler = new ErrorHandler()
 
   /**
     * Implicit conversion of String to ConfigurableMessage
@@ -65,8 +67,7 @@ abstract class MailTemplate {
       println("Sent message successfully....")
     }
     catch {
-      case mex: MessagingException => mex.printStackTrace()
-      case e: Exception => e.printStackTrace()
+	    case e: Exception => on.activate()
     }
   }
 
