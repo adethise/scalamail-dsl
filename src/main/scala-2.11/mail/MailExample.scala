@@ -5,7 +5,7 @@ class MailExample extends MailTemplate {
 	// setting the host
 	// syntax;	[host("<hostname>:<port>")]
 	// default: localhost:2525
-	host = "localhost:2525"
+	host <-- "localhost:2525"
 
 	// setting the emitter and recipients
 	// syntax:	<emitter> [to <recipient>] [cc <recipient>] [bcc <recipient>]
@@ -37,14 +37,18 @@ class MailExample extends MailTemplate {
 			"""
 
 	// setting the message's content (in HTML)
+	// Can make use of Escape.html
 	message HTMLcontent
-			"""
+			"""<body>
 	  <h1>A note about the tests.</h1>
 
 	  <p>Dear fellow developpers, <i>everything</i> is going as planned.<p>
 	  <p>See you in the Intel room.</p>
 
-	  <p><a href="http://me.net/">TopDev1337</a></p>
+	  <p><a href="http://me.net/">
+			""" + Escape.html("TopDev & co.") +
+			"""</a></p>
+	  </body>
 			"""
 
 	/* low level configuration :

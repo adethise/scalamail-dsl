@@ -2,7 +2,7 @@ package mail
 
 class Mail extends MailTemplate {
 
-	host = "localhost:2525"
+	host <-- "localhost:2525"
 
 	"saber@fate.net" to("archer@fate.net", "rider@fate.net") cc "shirou@fate.net"
 
@@ -24,12 +24,16 @@ class Mail extends MailTemplate {
 
 	message HTMLcontent
 			"""
+	  <body>
+
 	  <h1>A note about the war</h1>
 
 	  <p>Dear fellow heroes, everything is going as planned.<p>
 	  <p>See you on the battlefield.</p>
 
 	  <p>Saber</p>
+
+	  </body>
 			"""
 
 

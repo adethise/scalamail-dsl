@@ -36,6 +36,8 @@ class ConfigurableMessage(from: String, session: Session) {
 
 	def cc(dests: String*) = setRecipients(CC, dests)
 
+	def bcc(dests: String*) = setRecipients(BCC, dests)
+
 	/* Set the recipients */
 	def setRecipients(mode: Message.RecipientType, dests: Seq[String]):
 	ConfigurableMessage
@@ -45,8 +47,6 @@ class ConfigurableMessage(from: String, session: Session) {
 		}
 		this
 	}
-
-	def bcc(dests: String*) = setRecipients(BCC, dests)
 
 	/* Set the subject */
 	def subject(subject: String) = {
@@ -87,13 +87,4 @@ class ConfigurableMessage(from: String, session: Session) {
 	/* Return the low-level message for advanced configuration */
 	def lowLevel() = message
 
-}
-
-object Escape {
-	def html(content: String): String = {
-		content.replace("&", "&amp;").
-				replace("\"", "&quot;").
-				replace("<", "&lt;").
-				replace(">", "&gt;")
-	}
 }

@@ -16,11 +16,29 @@ abstract class MailTemplate {
 
 	/* Class attributes */
 
+	val host = new {
+		/**
+		  * Define the SMTP server parameters.
+		  *
+		  * @param name A string hostname:port
+		  */
+		def <--(name: String) = {
+			val (hostname, port) = name.split(":") match {
+				case Array() => ("localhost", "2525")
+				case Array(h) => (h, "2525")
+				case Array(h, p) => (h, p)
+				case Array(h, p, _) => (h, p)
+			}
+			val properties: Properties = System.getProperties
+			properties.setProperty("mail.smtp.host", hostname)
+			properties.setProperty("mail.smtp.port", port)
+
+			session = Session.getDefaultInstance(properties)
+		}
+	}
 	protected var message: ConfigurableMessage = null
 	protected var session: Session = null
-
 	protected var on: ListenerManager = new ListenerManager()
-	protected var host: String = ""
 
 	/**
 	  * Implicit conversion of String to ConfigurableMessage
@@ -45,23 +63,6 @@ abstract class MailTemplate {
 	}
 
 	/**
-	  * Define the SMTP server parameters.
-	  *
-	  * @param name A string hostname:port
-	  */
-	def host_=(name: String) = {
-		val hostport = name split ":"
-		val hostname = if (hostport.nonEmpty) hostport(0) else "localhost"
-		val port = if (hostport.tail.nonEmpty) hostport(1) else "2525"
-		val properties: Properties = System.getProperties
-		properties.setProperty("mail.smtp.host", hostname)
-		properties.setProperty("mail.smtp.port", port)
-
-		session = Session.getDefaultInstance(properties)
-		host = name
-	}
-
-	/**
 	  * Send the mail.
 	  */
 	def send() = {
@@ -77,4 +78,13 @@ abstract class MailTemplate {
 	def getLowLevelMessage = message lowLevel()
 
 	def setLowLevelSession(session: Session) = this.session = session
+}
+
+object Escape {
+	def html(content: String): String = {
+		content.replace("&", "&amp;").
+				replace("\"", "&quot;").
+				replace("<", "&lt;").
+				replace(">", "&gt;")
+	}
 }
