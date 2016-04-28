@@ -16,26 +16,6 @@ abstract class MailTemplate {
 
 	/* Class attributes */
 
-	val host = new {
-		/**
-		  * Define the SMTP server parameters.
-		  *
-		  * @param name A string hostname:port
-		  */
-		def <--(name: String) = {
-			val (hostname, port) = name.split(":") match {
-				case Array() => ("localhost", "2525")
-				case Array(h) => (h, "2525")
-				case Array(h, p) => (h, p)
-				case Array(h, p, _) => (h, p)
-			}
-			val properties: Properties = System.getProperties
-			properties.setProperty("mail.smtp.host", hostname)
-			properties.setProperty("mail.smtp.port", port)
-
-			session = Session.getDefaultInstance(properties)
-		}
-	}
 	protected var message: ConfigurableMessage = null
 	protected var session: Session = null
 	protected var on: ListenerManager = new ListenerManager()
@@ -72,6 +52,27 @@ abstract class MailTemplate {
 		}
 		catch {
 			case e: Exception => on.errored()
+		}
+	}
+
+	val host = new {
+		/**
+		  * Define the SMTP server parameters.
+		  *
+		  * @param name A string hostname:port
+		  */
+		def <--(name: String) = {
+			val (hostname, port) = name.split(":") match {
+				case Array() => ("localhost", "2525")
+				case Array(h) => (h, "2525")
+				case Array(h, p) => (h, p)
+				case Array(h, p, _) => (h, p)
+			}
+			val properties: Properties = System.getProperties
+			properties.setProperty("mail.smtp.host", hostname)
+			properties.setProperty("mail.smtp.port", port)
+
+			session = Session.getDefaultInstance(properties)
 		}
 	}
 

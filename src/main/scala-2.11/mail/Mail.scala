@@ -43,7 +43,8 @@ class Mail extends MailTemplate {
 
 	on error {
 		println("It's all Kirei's fault.")
-		// this.send() # JUST KIDDING DON'T DO THIS
+		// this.send() # JUST KIDDING DON'T DO THIS (infinite loop !)
+		// 1 / 0       # Don't do this either
 	}
 
 	on success {

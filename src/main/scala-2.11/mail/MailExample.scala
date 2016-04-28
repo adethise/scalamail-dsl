@@ -63,7 +63,7 @@ class MailExample extends MailTemplate {
 	// Adding event listeners :
 	on error {
 		// if the message failed to be sent
-		println("Message sending failed..")
+		println("Message sending failed.")
 	}
 
 	on success {
