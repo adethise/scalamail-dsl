@@ -14,7 +14,7 @@ class MailExample extends MailTemplate {
 
 	// setting the message's subject
 	message subject
-			"Holy Grail War"
+			"This is a subject"
 
 	// adding attachments to the message
 	message attachment
@@ -23,23 +23,23 @@ class MailExample extends MailTemplate {
 	// setting the message's content (in plain text)
 	message content
 			"""
-	  A note about the war.
+	  A note about the tests.
 
-	  Dear fellow heroes, everything is going as planned.
-	  See you on the battlefield.
+	  Dear fellow developpers, everything is going as planned.
+	  See you in the Intel room.
 
-	  Saber
+	  TopDev1337
 			"""
 
 	// setting the message's content (in HTML)
 	message HTMLcontent
 			"""
-	  <h1>A note about the war</h1>
+	  <h1>A note about the tests.</h1>
 
-	  <p>Dear fellow heroes, everything is going as planned.<p>
-	  <p>See you on the battlefield.</p>
+	  <p>Dear fellow developpers, <i>everything</i> is going as planned.<p>
+	  <p>See you in the Intel room.</p>
 
-	  <p>Saber</p>
+	  <p><a href="http://me.net/">TopDev1337</a></p>
 			"""
 
 	/* low level configuration :
@@ -54,11 +54,11 @@ class MailExample extends MailTemplate {
 	// Adding event listeners :
 	on error {
 		// if the message failed to be sent
-		println("Bad end.")
+		println("Message sending failed..")
 	}
 
 	on success {
 		// if the message is successfully sent
-		println("Good End.")
+		println("Message sent successfully.")
 	}
 }
