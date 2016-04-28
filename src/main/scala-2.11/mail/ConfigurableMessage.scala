@@ -55,10 +55,11 @@ class ConfigurableMessage(from: String, session: Session) {
 
 	/* Add a file attachment to the email */
 	def attachment(filenames: String*): ConfigurableMessage = {
+		val userdir = System.getProperty("user.dir") + "/"
 		for (filename <- filenames) {
-			var path = System.getProperty("user.dir") + "/" + filename
-			var source = new FileDataSource(path)
-			var messageBodyPart = new MimeBodyPart()
+			val path = userdir + filename
+			val source = new FileDataSource(path)
+			val messageBodyPart = new MimeBodyPart()
 			messageBodyPart.setDataHandler(new DataHandler(source))
 			messageBodyPart.setFileName(filename)
 			multipart.addBodyPart(messageBodyPart)
@@ -67,9 +68,16 @@ class ConfigurableMessage(from: String, session: Session) {
 	}
 
 	/* Set the content of the message (must be html) */
-	/* TODO something else than files attachment*/
 	def content(content: String) = {
-		var messageBodyPart = new MimeBodyPart()
+		val messageBodyPart = new MimeBodyPart()
+		messageBodyPart.setContent(content, "text/plain")
+		multipart.addBodyPart(messageBodyPart)
+
+		message.setContent(multipart)
+	}
+
+	def HTMLcontent(content: String) = {
+		val messageBodyPart = new MimeBodyPart()
 		messageBodyPart.setContent(content, "text/html")
 		multipart.addBodyPart(messageBodyPart)
 

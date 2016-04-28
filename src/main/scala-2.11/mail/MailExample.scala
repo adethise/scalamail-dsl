@@ -12,23 +12,53 @@ class MailExample extends MailTemplate {
 	//					where recipient = <address> | (<address>[, <address>]...)
 	"abcd@gmail.com" to "web@gmail.com"
 
+	// setting the message's subject
 	message subject
 			"Holy Grail War"
 
+	// adding attachments to the message
+	message attachment
+			("file1", "file2")
+
+	// setting the message's content (in plain text)
 	message content
 			"""
-			 <h1>A note about the war</h1>
+	  A note about the war.
 
-			 <p>Dear fellow heroes, everything is going as planned.<p>
-			 <p>See you on the battlefield.</p>
-			 <p>Saber</p>
+	  Dear fellow heroes, everything is going as planned.
+	  See you on the battlefield.
+
+	  Saber
+			"""
+
+	// setting the message's content (in HTML)
+	message HTMLcontent
+			"""
+	  <h1>A note about the war</h1>
+
+	  <p>Dear fellow heroes, everything is going as planned.<p>
+	  <p>See you on the battlefield.</p>
+
+	  <p>Saber</p>
 			"""
 
 	/* low level configuration :
 	 * message:
-	 *		val lowLevelMessage: MimeMessage = message.lowLevel()
-	 *		must have set either the emitter / recipients or a manual session
+	 *		getLowLevelMessage
+	 *	=> allows to modify the MimeMessage before sending
 	 * session:
-	 *		session: javax.mail.Session = new Session(...)
+	 *		setLowLevelSession
+	 *  => allows to set the session with more than just host:port
 	 */
+
+	// Adding event listeners :
+	on error {
+		// if the message failed to be sent
+		println("Bad end.")
+	}
+
+	on success {
+		// if the message is successfully sent
+		println("Good End.")
+	}
 }

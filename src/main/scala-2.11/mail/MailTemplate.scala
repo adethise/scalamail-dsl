@@ -23,7 +23,7 @@ abstract class MailTemplate {
 	protected var message: ConfigurableMessage = null
 	protected var session: Session = null
 
-	protected var on: ErrorHandler = new ErrorHandler()
+	protected var on: ListenerManager = new ListenerManager()
 
 	/**
 	  * Implicit conversion of String to ConfigurableMessage
@@ -42,7 +42,7 @@ abstract class MailTemplate {
 			val properties: Properties = System.getProperties
 			properties.setProperty("mail.smtp.host", hostname)
 			properties.setProperty("mail.smtp.port", port)
-			val session: Session = Session.getDefaultInstance(properties)
+			session = Session.getDefaultInstance(properties)
 		}
 
 		// create, store and return the message
@@ -67,10 +67,14 @@ abstract class MailTemplate {
 	def send() = {
 		try {
 			Transport.send(message lowLevel())
-			println("Sent message successfully....")
+			on.succeeded()
 		}
 		catch {
-			case e: Exception => on.activate()
+			case e: Exception => on.errored()
 		}
 	}
+
+	def getLowLevelMessage = message lowLevel()
+
+	def setLowLevelSession(session: Session) = this.session = session
 }
