@@ -5,11 +5,16 @@ class MailExample extends MailTemplate {
 	// setting the host
 	// syntax;	[host("<hostname>:<port>")]
 	// default: localhost:2525
-	host("localhost:2525")
+	host = "localhost:2525"
 
 	// setting the emitter and recipients
 	// syntax:	<emitter> [to <recipient>] [cc <recipient>] [bcc <recipient>]
-	//					where recipient = <address> | (<address>[, <address>]...)
+	//          where recipient = <address> | (<address>[, <address>]...)
+	// OR syntax: <emitter>.
+	//                  to(<recipient>).
+	//                  cc(<recipient>).
+	//                  bcc(<recipient>)
+	//          where recipient = <address> | <address>[, <address>]...
 	"abcd@gmail.com" to "web@gmail.com"
 
 	// setting the message's subject

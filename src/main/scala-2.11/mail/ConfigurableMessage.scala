@@ -34,6 +34,8 @@ class ConfigurableMessage(from: String, session: Session) {
 
 	def to(dests: String*) = setRecipients(TO, dests)
 
+	def cc(dests: String*) = setRecipients(CC, dests)
+
 	/* Set the recipients */
 	def setRecipients(mode: Message.RecipientType, dests: Seq[String]):
 	ConfigurableMessage
@@ -43,8 +45,6 @@ class ConfigurableMessage(from: String, session: Session) {
 		}
 		this
 	}
-
-	def cc(dests: String*) = setRecipients(CC, dests)
 
 	def bcc(dests: String*) = setRecipients(BCC, dests)
 
@@ -78,7 +78,7 @@ class ConfigurableMessage(from: String, session: Session) {
 
 	def HTMLcontent(content: String) = {
 		val messageBodyPart = new MimeBodyPart()
-		messageBodyPart.setContent(content, "text/html")
+		messageBodyPart.setContent(Escape.html(content), "text/html")
 		multipart.addBodyPart(messageBodyPart)
 
 		message.setContent(multipart)
@@ -87,4 +87,13 @@ class ConfigurableMessage(from: String, session: Session) {
 	/* Return the low-level message for advanced configuration */
 	def lowLevel() = message
 
+}
+
+object Escape {
+	def html(content: String): String = {
+		content.replace("&", "&amp;").
+				replace("\"", "&quot;").
+				replace("<", "&lt;").
+				replace(">", "&gt;")
+	}
 }
