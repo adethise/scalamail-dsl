@@ -2,7 +2,7 @@ package mail
 
 class Mail extends MailTemplate {
 
-	host("localhost:2525")
+	host = "localhost:2525"
 
 	"saber@fate.net" to("archer@fate.net", "rider@fate.net") cc "shirou@fate.net"
 
