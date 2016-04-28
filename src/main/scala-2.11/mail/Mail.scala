@@ -10,7 +10,7 @@ class Mail extends MailTemplate {
 			"Holy Grail War"
 
 	message attachment
-			("test.txt", "test2.txt", "image.png")
+			("test-1.txt", "test-2.txt", "test-3.png")
 
 	message content
 			"""
@@ -23,6 +23,11 @@ class Mail extends MailTemplate {
 			"""
 
 	on error {
-		println("Bad end. It's all Kirei's fault.")
+		println("Bad end.")
+	}
+
+	on error {
+		println("It's all Kirei's fault.")
+		// this.send() # JUST KIDDING DON'T DO THIS
 	}
 }
