@@ -1,0 +1,112 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+
+\usepackage[left=2.00cm, right=2.00cm, top=2.00cm, bottom=2.00cm]{geometry}
+
+\author{Arnaud Dethise, Jonathan Powell}
+\title{LINGI2132: Languages and Translators\\
+	JavaMail Scala DSL\\
+	Development report}
+
+\begin{document}
+	
+\maketitle
+
+\section{Features of the DSL}
+
+	Our DSL focuses on simplicity. In the high-level form, it allows to set the host simply, declare a mail to be sent (with recipients, carbon copy and blind carbon copy recipients), and set the content of the mail.
+	
+	The contents of the mail include subject,  text (we allow to set the text in both plain text and HTML), and attachments.
+	
+	The additional features are declaration of error and success callbacks, HTML escaping, and low level access to attributes.
+	
+\section{Technical functionalities choices}
+
+	We will explain the different features of Scala seen in the course and, for each one, how we used them or why we don't use them. Those marked with a * are those used to implement the DSL.
+
+	\begin{itemize}
+		\item *\textbf{Constructor overload} We have an overloaded constructor for the \texttt{ConfigurableMessage} class. The default version takes a sender address and a session configuration. The simple version doesn't take a session and use the default parameters \texttt{localhost:2525}.
+		
+		\item \textbf{Setters / getters} We didn't use them because the objects we use are not supposed to be configured at once, but rather step by step. We also have different methods for each fake attribute (subject, content...), so having a single assignment method did not fit our DSL.
+		
+		\item *\textbf{Singleton for static methods} We use them to provide a static \texttt{Escape.html} method.
+		
+		\item *\textbf{Companion Object} We used them to provide static methods with the same class name, but not to access each other's private members.
+		
+		\item \textbf{Apply/Update} We didn't use them because they are called as methods (and can not be simplified) and we didn't want our DSL to look like a programming language.
+		
+		\item \textbf{Operator Overload} We didn't use them because using arithmetic operations on mail objects is counter-intuitive.
+		
+		\item *\textbf{Mutability} Both are used. We set all the variables that are not supposed to change (such as the low-level message) as immutable values, but those that are allowed to change (such as the high-level message and session if one wants to use the low level features) are stored as var. We also use mutable lists to store the callbacks (unlike the course's examples, which seemed to be wrong by using a mutable variable to store an immutable list).
+		
+		\item *\textbf{Pattern matching} We use pattern matching to identify the conformity of a split string to our expectations, and to know if it includes one or more fields.
+		
+		\item \textbf{Null/Options} We used the \texttt{null} value, but only to inside a single class (we never send an object that might be \texttt{null} outside of the class it was created in). Using Options would greatly complicate the hidden part of the DSL with no advantage.
+		
+		\item \textbf{Currying} We didn't use currying because we don't want the user to use functions. Also, since we only have one message at a time (our DSL doesn't include sending several different mails to the same people in a single pass), there wasn't any point in creating reusable functions for the user.
+		
+		\item *\textbf{Data Structures} Lists and arrays are used.
+		
+		\item *\textbf{Import} Scala syntax allows us to import several classes from the same package easier.
+		
+		\item *\textbf{Exceptions} We use JavaMail's exception to enable our callback management.
+		
+		\item *\textbf{By-name parameters} The by-name parameters are used to create callback listeners.
+		
+		\item \textbf{Stream} Not used.
+		
+		\item \textbf{Flow control declaration} Not used, too low-level for our target.
+		
+		\item *\textbf{Listeners} Used to provide error and success callbacks.
+		
+		\item *\textbf{Implicit conversion} Used to create a \texttt{ConfigurableMessage} from a simple string.
+		
+		\item *\textbf{Unnamed class} We use an unnamed internal class to provide a user-friendly command to set the host. We believe parenthesis are scary and error-inducing for programming-illiterate people, so we choose the syntax \texttt{host <-- "values"} over \texttt{host("values")}.
+		
+		\item *\textbf{Traits} Our callback mechanism is provided by extending the \texttt{listenerManager} trait, which is not tied to our specific application but could be used elsewhere.
+		
+		\item \textbf{Monads} Monads are not used because we didn't have a use for it.
+	\end{itemize}
+
+\clearpage
+
+\section{Shortcomings and future development}
+
+	The main shortcoming of our DSL is a design choice: we only send one mail at a time. That mail can be sent to several people, but the recipients will not be saved.
+	
+	Had we chosen to implement multiple messages, we could have used multiple definitions, re-use, recipient lists, etc. Those in turn could rely on currying, monads, options, operator overloads...
+	
+	However, even when trying to show our knowledge of Scala's advanced features, we didn't lose our main objective focus: the DSL must be \textit{simple}. Sending several mails from a single text file would make it much more bloated.
+	
+	\vskip 10pt
+	Another potential future development would be managing mail retrieval as well as mail sending. It is included in JavaMail (package \texttt{com.sun.mail.imap}), but we ignored it because that was entirely outside of our target scope.
+	
+	\vskip 10pt
+	The last important shortcoming is the extensibility: we believe by choosing our variables better and using more Options, we could make our DSL easier to extend. Currently, extending the DSL without modifying the existing classes would be difficult.
+	
+	\vskip 10pt
+	Not really a shortcoming, but we believe that if we had to restart from scratch, we would change the syntax to be closer to the scalatest DSL, which is a good example.
+
+\section{User-side advantages of our DSL}
+
+	Our DSL features three main advantages: simplicity, simplicity and simplicity.
+	
+	We have almost entirely eliminated any notion of variable and functions of our DSL. The calls are using Scala's parentheses-less method calls to make calls look like a mere section title. Our target isn't only developers: we want anyone with a limited to inexistent programming knowledge to be able to use the DSL.
+	
+	There are only four important part in the DSL from an user PoV: the host (optional), sender and recipients declaration, message definition, and callbacks (optional).
+	
+	The first one is based on an inherited methods (actually, anonymous object). The second one is based on implicit conversion and method chaining. The third one is based on an inherited \texttt{ConfigurableMessage} (class wrapping around the low-level \texttt{MimeMessage}). The last one is based on an inherited trait.
+	
+	\vskip 10pt
+	We still give low-level access: the method \texttt{setLowLevelSession(s: Session)} allows to set the details for the server connexion before the message is created, and the method \texttt{getLowLevelMessage} allows to modify directly the inner \texttt{MimeMessage} object after it's been created.
+	
+	\vskip 10pt
+	Lastly, the callbacks are aimed to be able to do anything in case of success or failure when sending the message. They use by-name parameters, and said parameter are stored until sending.
+	
+	Several outcomes are possible. For example, you could send another mail if you fail to send the current one. You could retry sending this one with another server. Or, more simply, you can print any message or write some logs.
+	
+\end{document}
