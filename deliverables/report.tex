@@ -97,16 +97,19 @@
 	
 	We have almost entirely eliminated any notion of variable and functions of our DSL. The calls are using Scala's parentheses-less method calls to make calls look like a mere section title. Our target isn't only developers: we want anyone with a limited to inexistent programming knowledge to be able to use the DSL.
 	
-	There are only four important part in the DSL from an user PoV: the host (optional), sender and recipients declaration, message definition, and callbacks (optional).
+	Even though the syntax is simple, we use a rich subset of email capabilities: attachments (by simply putting the filename / path), simultaneous plain text and HTML form, recipient types, etc. All those are easy to use yet optional.
+	
+	\vskip 10pt
+	There are only four important part in the DSL from an user point-of-view: the host (optional), sender and recipients declaration, message definition, and callbacks (optional).
 	
 	The first one is based on an inherited methods (actually, anonymous object). The second one is based on implicit conversion and method chaining. The third one is based on an inherited \texttt{ConfigurableMessage} (class wrapping around the low-level \texttt{MimeMessage}). The last one is based on an inherited trait.
 	
 	\vskip 10pt
-	We still give low-level access: the method \texttt{setLowLevelSession(s: Session)} allows to set the details for the server connexion before the message is created, and the method \texttt{getLowLevelMessage} allows to modify directly the inner \texttt{MimeMessage} object after it's been created.
+	We still give low-level access: the method \texttt{setLowLevelSession(s:Session)} allows to set the details for the server connexion before the message is created, and the method \texttt{getLowLevelMessage} allows to modify directly the inner \texttt{MimeMessage} object after it's been created.
 	
 	\vskip 10pt
 	Lastly, the callbacks are aimed to be able to do anything in case of success or failure when sending the message. They use by-name parameters, and said parameter are stored until sending.
 	
-	Several outcomes are possible. For example, you could send another mail if you fail to send the current one. You could retry sending this one with another server. Or, more simply, you can print any message or write some logs.
+	Several utilizations are possible. For example, you could send another mail if you fail to send the current one. You could retry sending this one with another server. Or, more simply, you can print any message or write some logs.
 	
 \end{document}
