@@ -3,6 +3,8 @@ package mail
 import java.util.Properties
 import javax.mail.{Session, Transport}
 
+import utils.ListenerManager
+
 /**
   * DSL Mail Template
   * This class is the template extended by a DSL Mail.

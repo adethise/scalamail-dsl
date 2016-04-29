@@ -3,7 +3,7 @@ package mail
 class MailExample extends MailTemplate {
 
 	// setting the host
-	// syntax;	[host("<hostname>:<port>")]
+	// syntax;	[host <-- "<hostname>[:<port>]"]
 	// default: localhost:2525
 	host <-- "localhost:2525"
 
