@@ -80,6 +80,15 @@ abstract class MailTemplate extends ListenerManager {
 	def setLowLevelSession(session: Session) = this.session = session
 }
 
+object MailTemplate {
+
+	def main(args: Array[String]) {
+		val mail = new Mail
+		mail.send()
+	}
+
+}
+
 object Escape {
 	def html(content: String): String = {
 		content.replace("&", "&amp;").
