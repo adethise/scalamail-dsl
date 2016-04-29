@@ -23,7 +23,7 @@ class MailExample extends MailTemplate {
 
 	// adding attachments to the message
 	message attachment
-			("file1", "file2")
+			("test-1.txt", "test-2.txt", "test-3.png")
 
 	// setting the message's content (in plain text)
 	message content
