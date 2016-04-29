@@ -6,4 +6,4 @@ scalaVersion := "2.11.8"
 
 libraryDependencies += "javax.mail" % "mail" % "1.4.1"
 
-mainClass in(Compile, run) := Some("example.SendMailExample")
+mainClass in(Compile, run) := Some("mail.Mail")
